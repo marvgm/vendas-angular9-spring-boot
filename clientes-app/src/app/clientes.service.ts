@@ -4,12 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { Cliente } from './clientes/cliente';
 import { Observable } from 'rxjs';
 
+import { environment } from '../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ClientesService {
 
-  urlClientes = 'http://localhost:8080/api/clientes';
+  apiURL = environment.apiURLBase + '/api/clientes';
   clientes:  Observable<Cliente[]>;
   cliente:  Observable<Cliente>;
 
@@ -17,24 +19,24 @@ export class ClientesService {
   }
 
   salvar( cliente: Cliente): Observable <Cliente> {
-    return this.http.post<Cliente>(this.urlClientes, cliente);
+    return this.http.post<Cliente>(`${this.apiURL}`, cliente);
   }
 
   atualizar( cliente: Cliente): Observable <any> {
-    return this.http.put<Cliente>(`http://localhost:8080/api/clientes/${cliente.id}`, cliente);
+    return this.http.put<Cliente>(`${this.apiURL}/${cliente.id}`, cliente);
   }
 
   deletar( cliente: Cliente): Observable <any> {
-    return this.http.delete<Cliente>(`http://localhost:8080/api/clientes/${cliente.id}`);
+    return this.http.delete<Cliente>(`${this.apiURL}/${cliente.id}`);
   }
 
   getClientes(): Observable<Cliente[]> {
-    this.clientes = this.http.get<Cliente[]>(this.urlClientes);
+    this.clientes = this.http.get<Cliente[]>(`${this.apiURL}`);
     return this.clientes;
   } 
   
   getClientesById(id: number): Observable<Cliente> {
-    this.cliente = this.http.get<any>(`http://localhost:8080/api/clientes/${id}`);
+    this.cliente = this.http.get<any>(`${this.apiURL}/${id}`);
     console.log(id);
     return this.cliente;
   } 
