@@ -1,5 +1,6 @@
 package io.github.marvgm.clientes.service;
 
+import io.github.marvgm.clientes.exception.UsuarioCadastradoException;
 import io.github.marvgm.clientes.model.entity.Usuario;
 import io.github.marvgm.clientes.model.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,13 @@ public class UsuarioService implements UserDetailsService {
                 .password(usuario.getPassword())
                 .roles("USER")
                 .build();
+    }
+
+    public Usuario salvar(Usuario usuario){
+        boolean existeUsuario = usuarioRepository.existsByUsername(usuario.getUsername());
+        if(existeUsuario){
+            throw new UsuarioCadastradoException(usuario.getUsername());
+        }
+        return usuarioRepository.save(usuario);
     }
 }
