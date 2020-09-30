@@ -24,7 +24,14 @@ export class LoginComponent {
   }
 
   onSubmit(){
-    this.router.navigate(['/home']);
+    this.authService
+          .tentarLogar(this.username, this.password)
+          .subscribe(response => {
+            this.router.navigate(['/home']);
+            console.log(response);
+          }, errorsResponse => {
+            this.errors = ['Usuário e/ou senha incorreto(s).']
+          })
   }
 
   preparaCadastrar(event){
@@ -45,6 +52,9 @@ export class LoginComponent {
         .subscribe( response => {
           this.mensagemSucesso = "Cadastro realizado com sucesso! Efetue o login.";
           this.errors =[];
+          this.cadastrando = false;
+          this.username = '';
+          this.password = '';
         }, errorResponse => {
           this.errors = errorResponse.error.errors;
           this.mensagemSucesso = null;
